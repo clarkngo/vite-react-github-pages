@@ -1,16 +1,103 @@
-# React + Vite
+# Vite React GitHub Pages
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+I got really annoyed on configuring a new Vite React GitHub Pages Static Site.
 
-Currently, two official plugins are available:
+So here's a template repo.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Install
+```
+npm install
+```
 
-## React Compiler
+## Run locally
+```
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Create Build
+```
+npm run build
+```
 
-## Expanding the ESLint configuration
+## Preview Build
+```
+npm run preview
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# More Info
+## vite.config.js
+```
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import { viteSingleFile } from 'vite-plugin-singlefile'; 
+
+export default defineConfig({
+  plugins: [
+    // Include the necessary framework plugin
+    react(), 
+    // Add the vite-plugin-singlefile plugin to inline all CSS and JS into index.html
+    viteSingleFile(),
+    svgr(),
+  ],
+  
+  build: {
+    // Ensure this is set to your build folder
+    outDir: 'dist', 
+  },
+});
+
+```
+## .github/workflows/static.yml
+```
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: './dist'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+
+## Plugin Installs
+```
+npm install -D vite-plugin-singlefile
+npm install -D vite-plugin-svgr
+```
